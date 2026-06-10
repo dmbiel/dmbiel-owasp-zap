@@ -1,16 +1,21 @@
-# Ignore Play! working directory #
-bin/
-/db
-.eclipse
-/lib/
-/logs/
-/modules
-/project/project
-/project/target
-/target
-tmp/
-test-result
-server.pid
-*.eml
-/dist/
-.cache
+# ZAP reports
+reports/*.html
+reports/*.md
+reports/*.json
+reports/*.xml
+
+# Keep reports directory
+!reports/.gitkeep
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
