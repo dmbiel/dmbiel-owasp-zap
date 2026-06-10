@@ -1,3 +1,5 @@
+name: dmbiel-owasp-zap
+
 services:
   juice-shop:
     image: bkimminich/juice-shop:latest
