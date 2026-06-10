@@ -1,0 +1,44 @@
+name: dmbiel-owasp-zap
+
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: dmbiel-juice-shop
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  zap-baseline:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: dmbiel-zap-baseline
+    depends_on:
+      - juice-shop
+    volumes:
+      - ./:/zap/wrk/:rw
+    working_dir: /zap/wrk
+    command: >
+      zap-baseline.py
+      -t http://juice-shop:3000
+      -m 2
+      -c zap/rules-baseline.conf
+      -r reports/zap-baseline.html
+      -w reports/zap-baseline.md
+      -J reports/zap-baseline.json
+      -I
+
+  zap-full:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    container_name: dmbiel-zap-full
+    depends_on:
+      - juice-shop
+    volumes:
+      - ./:/zap/wrk/:rw
+    working_dir: /zap/wrk
+    command: >
+      zap-full-scan.py
+      -t http://juice-shop:3000
+      -m 5
+      -c zap/rules-full.conf
+      -r reports/zap-full.html
+      -w reports/zap-full.md
+      -J reports/zap-full.json
+      -I
