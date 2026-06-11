@@ -94,6 +94,22 @@ class AssertZapFindingsTests(unittest.TestCase):
         self.assertEqual(result, 1)
         self.assertIn("Expected at least 1 Medium+High alerts", stderr)
 
+    def test_main_fails_when_total_threshold_is_not_met(self) -> None:
+        report = {"alerts": [{"risk": "Medium"}]}
+
+        result, _, stderr = self.run_main(report, "--min-total-alerts", "2")
+
+        self.assertEqual(result, 1)
+        self.assertIn("Expected at least 2 total alerts", stderr)
+
+    def test_main_fails_for_missing_report_file(self) -> None:
+        missing_report = Path(tempfile.gettempdir()) / "zap-report-that-does-not-exist.json"
+
+        result, _, stderr = self.run_main_path(missing_report)
+
+        self.assertEqual(result, 1)
+        self.assertIn("Report file does not exist", stderr)
+
     def test_main_fails_for_invalid_json(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             report_path = Path(temp_dir) / "zap.json"
